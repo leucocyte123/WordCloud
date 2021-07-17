@@ -5,6 +5,9 @@ import nltk
 import jieba
 import wordcloud
 
+ignored_words = {'你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗'}
+# ignored_words = {}
+
 def filterChinese(line):
     regStr = ".*?([\u4E00-\u9FA5]+).*?"
     ret = re.findall(regStr, line)
@@ -25,13 +28,16 @@ def main():
     
     # Cut sentences
     words = sum([list(jieba.cut(sentence)) for sentence in sentences], [])
+
+    # Filter some words
+    words = [w for w in words if w not in ignored_words]
     
     # Count frequency
     frequency = nltk.FreqDist(words)
     
     # Generate word cloud
     font = r'C:\Windows\Fonts\MSYHL.TTC'
-    wordcloud.WordCloud(background_color="white", font_path=font).generate_from_frequencies(frequency).to_file('%s.png' % filename)
+    wordcloud.WordCloud(background_color="white", font_path=font, width=800, height=400).generate_from_frequencies(frequency).to_file('%s.png' % filename)
 
 
 if __name__ == '__main__':
