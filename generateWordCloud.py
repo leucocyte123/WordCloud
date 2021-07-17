@@ -5,7 +5,7 @@ import nltk
 import jieba
 import wordcloud
 
-ignored_words = {'你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗'}
+ignored_words = {'你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗', '有', '还', '也', '没', '就', '都'}
 # ignored_words = {}
 
 def filterChinese(line):
@@ -27,7 +27,7 @@ def main():
     sentences = sum([filterChinese(line) for line in lines], [])
     
     # Cut sentences
-    words = sum([list(jieba.cut(sentence)) for sentence in sentences], [])
+    words = sum([list(jieba.cut(sentence, cut_all=True)) for sentence in sentences], [])
 
     # Filter some words
     words = [w for w in words if w not in ignored_words]
