@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 import os
-from datetime import date
+import sys
+from datetime import datetime
 import asyncio
 
 from blivedm.blivedm import BLiveClient, DanmakuMessage
+from config import all_room_ids
 
-filename = None
+filename = 'log/undefined.txt'
+def setFilename(name):
+    global filename
+    filename = 'log/danmu-%s-%s.txt' % (name, datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
 def getFilename():
     global filename
-    if filename is None:
-        filename = 'log/danmu-%s.txt' % date.today().strftime('%Y-%m-%d')
     return filename
 
 class MyBLiveClient(BLiveClient):
@@ -20,9 +23,14 @@ class MyBLiveClient(BLiveClient):
             f.write('\n')
 
 async def main():
-    # 参数1是直播间ID
+    if len(sys.argv) > 1:
+        room_name = sys.argv[1]
+    else:
+        room_name = '雪狐桑'
+    room_id = all_room_ids[room_name]
+    setFilename(room_name)
+
     # 如果SSL验证失败就把ssl设为False
-    room_id = 12845193
     client = MyBLiveClient(room_id, ssl=True)
     future = client.start()
     try:
