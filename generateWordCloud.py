@@ -7,6 +7,7 @@ import wordcloud
 
 ignored_words = {'你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗', '有', '还', '也', '没', '就', '都'}
 # ignored_words = {}
+added_words = {'内鬼'}
 
 def filterChinese(line):
     regStr = ".*?([\u4E00-\u9FA5]+).*?"
@@ -25,9 +26,13 @@ def main():
 
     # Fileter Chinese characters
     sentences = sum([filterChinese(line) for line in lines], [])
+
+    # Add words to jieba
+    for w in added_words:
+        jieba.add_word(w)
     
     # Cut sentences
-    words = sum([list(jieba.cut(sentence, cut_all=True)) for sentence in sentences], [])
+    words = sum([list(jieba.cut(sentence, cut_all=False)) for sentence in sentences], [])
 
     # Filter some words
     words = [w for w in words if w not in ignored_words]
