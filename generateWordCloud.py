@@ -4,6 +4,8 @@ import nltk
 
 import jieba
 import wordcloud
+import numpy as np
+from PIL import Image
 
 ignored_words = {'你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗', '有', '还', '也', '没', '就', '都'}
 # ignored_words = {}
@@ -19,6 +21,11 @@ def filterChinese(line):
 
 def main():
     filename = sys.argv[1]
+
+    # Import background image
+    img = Image.open("materials/初号狐.png")
+    img = img.resize((int(img.width * 2), int(img.height * 2)))
+    background_Image = np.array(img)
 
     # Read messages
     with open(filename, encoding='utf-8') as f:
@@ -39,10 +46,19 @@ def main():
     
     # Count frequency
     frequency = nltk.FreqDist(words)
-    
+
     # Generate word cloud
     font = r'C:\Windows\Fonts\MSYHL.TTC'
-    wordcloud.WordCloud(background_color="white", font_path=font, width=800, height=400).generate_from_frequencies(frequency).to_file('%s.png' % filename)
+    wc = wordcloud.WordCloud(background_color="white", font_path=font, mask=background_Image)
+    # wc = wordcloud.WordCloud(background_color="white", font_path=font, width=800, height=400)
+    wc.generate_from_frequencies(frequency)
+    
+    # Set color from image
+    img_colors = wordcloud.ImageColorGenerator(background_Image)
+    wc.recolor(color_func=img_colors)
+    
+    # Save to file
+    wc.to_file('%s.png' % filename)
 
 
 if __name__ == '__main__':
