@@ -9,7 +9,7 @@ from PIL import Image
 
 ignored_words = {'你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗', '有', '还', '也', '没', '就', '都'}
 # ignored_words = {}
-added_words = {'内鬼'}
+added_words = {'内鬼', '雪狐'}
 
 def filterChinese(line):
     regStr = ".*?([\u4E00-\u9FA5]+).*?"
