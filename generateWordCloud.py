@@ -3,13 +3,15 @@ import sys
 import nltk
 
 import jieba
+from numpy.core.fromnumeric import size
 import wordcloud
 import numpy as np
 from PIL import Image
+import matplotlib.pyplot as plt
 
-ignored_words = {'你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗', '有', '还', '也', '没', '就', '都'}
+ignored_words = {'你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗', '有', '还', '也', '没', '就', '都', '晚安', '晚上好', '哈哈哈', '哈哈哈哈', '好耶'}
 # ignored_words = {}
-added_words = {'内鬼', '雪狐'}
+added_words = {'内鬼', '雪狐', '晚上好', '好耶'}
 
 def filterChinese(line):
     regStr = ".*?([\u4E00-\u9FA5]+).*?"
@@ -23,9 +25,9 @@ def main():
     filename = sys.argv[1]
 
     # Import background image
-    img = Image.open("materials/初号狐.png")
-    img = img.resize((int(img.width * 2), int(img.height * 2)))
-    background_Image = np.array(img)
+    shape_image = Image.open("materials/初号狐.png")
+    # shape_image = shape_image.resize((int(shape_image.width * 2), int(shape_image.height * 2)))
+    shape_image = np.array(shape_image)
 
     # Read messages
     with open(filename, encoding='utf-8') as f:
@@ -49,16 +51,34 @@ def main():
 
     # Generate word cloud
     font = r'C:\Windows\Fonts\MSYHL.TTC'
-    wc = wordcloud.WordCloud(background_color="white", font_path=font, mask=background_Image)
+    
     # wc = wordcloud.WordCloud(background_color="white", font_path=font, width=800, height=400)
+    # wc = wordcloud.WordCloud(background_color='#7FFFD4', font_path=font, mask=shape_image)
+    wc = wordcloud.WordCloud(mode='RGBA', background_color='rgba(255, 255, 255, 0)', font_path=font, mask=shape_image)
     wc.generate_from_frequencies(frequency)
     
     # Set color from image
-    img_colors = wordcloud.ImageColorGenerator(background_Image)
+    img_colors = wordcloud.ImageColorGenerator(shape_image)
     wc.recolor(color_func=img_colors)
+
+    # Add background
+    image = Image.fromarray(wc.to_array())
+    background = Image.open('materials/钢板.png').convert("RGBA")
+    print (image.size, background.size)
+    image = Image.alpha_composite(background, image)
     
     # Save to file
-    wc.to_file('%s.png' % filename)
+    # wc.to_file('%s.png' % filename)
+    plt.figure()
+    plt.axis('off')
+    fig = plt.imshow(image, interpolation='nearest')
+    fig.axes.get_xaxis().set_visible(False)
+    fig.axes.get_yaxis().set_visible(False)
+    plt.savefig('log/test.png',
+                bbox_inches='tight',
+                pad_inches=0,
+                format='png',
+                dpi=300)
 
 
 if __name__ == '__main__':
