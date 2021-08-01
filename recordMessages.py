@@ -24,7 +24,7 @@ def inputMysqlPassword():
     mysqlPassword = getpass.getpass(prompt='MySQL Password: ')
 
 def parseMessage(message: DanmakuMessage):
-    uname = message.username
+    uname = message.uname
     uid = message.uid
     danmu = message.msg
     return uname, uid, danmu
