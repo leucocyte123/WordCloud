@@ -10,17 +10,19 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 ignored_words = {
-    '你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗', '有', '还', '也', '没', '就', '都', '好', '把', '被', '耶',
-    '晚安', '好耶', '晚上',
+    # '你', '我', '的', '了', '是', '啊', '吧', '不', '这', '吗', '有', '还', '也', '没', '就', '都', '好', '把', '被', '耶',
+    # '晚安', '好耶', '晚上',
     '晚上好',
     # '哈哈', '哈哈哈', '哈哈哈哈',
 }
 # ignored_words = {}
 added_words = {
-    '内鬼', 
-    '雪狐', 
-    '我不能接受',
-    '好人', '坏人', '好女人', '坏女人'
+    # '内鬼', 
+    # '雪狐', 
+    '晚上好',
+    '中秋快乐',
+    '不能接受',
+    # '好人', '坏人', '好女人', '坏女人'
 }
 # added_words = {}
 
@@ -56,6 +58,7 @@ def main():
 
     # Filter some words
     words = [w for w in words if w not in ignored_words]
+    words = [w for w in words if len(w) > 1]
     
     # Count frequency
     frequency = nltk.FreqDist(words)
