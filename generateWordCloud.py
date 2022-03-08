@@ -25,12 +25,17 @@ added_words = {
     '晚上好',
     '中秋快乐',
     '不能接受',
+    '国庆快乐',
+    '从天台上下来',
+    '歪',
+    '不要跳啊',
+    '？'
     # '好人', '坏人', '好女人', '坏女人'
 }
 # added_words = {}
 
 def filterChinese(line):
-    regStr = ".*?([\?\u4E00-\u9FA5]+).*?"
+    regStr = ".*?([？\u4E00-\u9FA5]+).*?"
     ret = re.findall(regStr, line)
     if ret:
         return ret
@@ -61,7 +66,7 @@ def main():
 
     # Filter some words
     words = [w for w in words if w not in ignored_words]
-    words = [w for w in words if len(w) > 1]
+    words = [w for w in words if w == '？' or len(w) > 1]
     
     # Count frequency
     frequency = nltk.FreqDist(words)
@@ -96,7 +101,6 @@ def main():
     #             pad_inches=0,
     #             format='png',
     #             dpi=300)
-
 
 if __name__ == '__main__':
     main()
